@@ -32,11 +32,8 @@ class Agente:
 
         no_raiz = NoArvoreDeBusca(jogo.estado_inicial, None, None)
         borda = list()
-        explorado = list()
+        explorado = set()
         borda.insert(0, no_raiz)
-
-        print("Estado inicial")
-        print(jogo.estado_inicial)
 
         # retorna o estado atual se ele for igual ao objetivo
         if jogo.teste_de_objetivo(no_raiz.estado):
@@ -49,7 +46,7 @@ class Agente:
             no_atual = borda[0]
             borda.remove(no_atual)
             # adiciona ao conjunto de nós explorados
-            explorado.append(no_atual.estado)
+            explorado.add(no_atual.estado)
             print("Qty Explorados ->" + str(len(explorado)))
 
             for acao in jogo.get_opcoes_possiveis():
