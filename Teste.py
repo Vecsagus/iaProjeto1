@@ -5,7 +5,7 @@ from Agente import Agente
 novo_quebra_cabeca = QuebraCabeca([[5, 3, 2], [1, 0, 4], [6, 7, 8]])
 agente = Agente()
 resultado = agente.busca_em_amplitude(novo_quebra_cabeca)
-print(resultado.estado)
+print(resultado)
 
 #
 # novo_quebra_cabeca = QuebraCabeca()
