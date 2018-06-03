@@ -1,13 +1,11 @@
 # coding=utf-8
 from QuebraCabeca import QuebraCabeca
+from Agente import Agente
 
-novo_quebra_cabeca = QuebraCabeca([[5, 3, 2], [1, 4, 0], [6, 7, 8]])
-estadoInicial = novo_quebra_cabeca.estado_inicial
-print(estadoInicial)
-novo_estado = novo_quebra_cabeca.transicao(estadoInicial, novo_quebra_cabeca.acao.para_cima)
-novo_estado = novo_quebra_cabeca.transicao(estadoInicial, novo_quebra_cabeca.acao.para_esquerda)
-novo_estado = novo_quebra_cabeca.transicao(estadoInicial, novo_quebra_cabeca.acao.para_esquerda)
-print(novo_estado)
+novo_quebra_cabeca = QuebraCabeca([[5, 3, 2], [1, 0, 4], [6, 7, 8]])
+agente = Agente()
+resultado = agente.busca_em_amplitude(novo_quebra_cabeca)
+print(resultado.estado)
 
 #
 # novo_quebra_cabeca = QuebraCabeca()
