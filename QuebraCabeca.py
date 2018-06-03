@@ -1,18 +1,17 @@
 # coding=utf-8
 import random
+from enum import Enum
+from ArvoreDeBusca import NoArvoreDeBusca
 
 
 class QuebraCabeca:
-    estado_objetivo = None
-    estado_inicial = None
-    estado_atual = None
-
-    def __init__(self):
+    def __init__(self, estado_inicial=None):
         self.estado_objetivo = [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
-        self.estado_inicial = self._gera_estado_inicial()
-        self.estado_atual = self.estado_inicial
+        self.estado_inicial = estado_inicial if not None else self.gera_estado_inicial()
+        self.acao = Enum('Acao', 'para_esquerda para_cima para_direita para_baixo')
 
-    def _gera_estado_inicial(self):
+    @staticmethod
+    def gera_estado_inicial():
         estado_inicial = []
         pecas = [i for i in range(9)]
         random.shuffle(pecas)
@@ -21,68 +20,76 @@ class QuebraCabeca:
         estado_inicial.append([pecas[6], pecas[7], pecas[8]])
         return estado_inicial
 
-    def para_direita(self):
-        esta_mudado = False
-        if self.estado_atual is not None:
-            for linha_pos, linha in enumerate(self.estado_atual):
-                for column_pos, peca in enumerate(linha):
+    #
+    # Executa a transição do espaço em branco ou seja o 0
+    # Retorna um novo estado, caso não possa modificar o 0 então retorna False
+    #
+    def transicao(self, estado, acao):
+        for l, linha in enumerate(estado):  # Linha
+            for c, peca in enumerate(linha):  # Coluna
+                if peca == 0:
+                    if acao == self.acao.para_esquerda and (c > 0):
+                        (estado[l][c], estado[l][c - 1]) = (estado[l][c - 1], estado[l][c])
+                    elif (acao == self.acao.para_cima) and (l > 0):
+                        (estado[l][c], estado[l - 1][c]) = (estado[l - 1][c], estado[l][c])
+                    elif acao == self.acao.para_direita and (c < 2):
+                        (estado[l][c], estado[l][c + 1]) = (estado[l][c + 1], estado[l][c])
+                    elif acao == self.acao.para_baixo and (l < 2):
+                        (estado[l][c], estado[l + 1][c]) = (estado[l + 1][c], estado[l][c])
+                        pass
+                    else:
+                        return False
+        return estado
 
-                    if peca == 0 and column_pos < 2:
-                        zero = self.estado_atual[linha_pos][column_pos]
-                        prox = self.estado_atual[linha_pos][column_pos + 1]
-                        self.estado_atual[linha_pos][column_pos] = prox
-                        self.estado_atual[linha_pos][column_pos + 1] = zero
-                        esta_mudado = True
+    def teste_de_objetivo(self, estado):
+        return cmp(self.estado_objetivo, estado)
 
-            return esta_mudado
+    # def imprime(estado):
+    #     for linha in estado:
+    #         print("-------")
+    #         for coluna in linha:
+    #             print("|" + str(coluna), end = "")
+    #         print("|")
+    #     print("-------")
 
-    def para_esquerda(self):
-        esta_mudado = False
-        if self.estado_atual is not None:
-            for linha_pos, linha in enumerate(self.estado_atual):
+    def busca_em_amplitude(self, problema):
+        explorado = set()
+        fronteira = []
+        no_raiz = NoArvoreDeBusca(problema.estado_inicial, None, None)
+        fronteira.append(no_raiz)
 
-                for column_pos, peca in enumerate(linha):
+        while True:
+            if not len(fronteira):
+                return -1
+            # seleciona e deleta o primeiro elemento da borda
+            no_atual = fronteira[0]
+            del fronteira[0]
+            # retorna o estado atual se ele for igual ao objetivo
+            if cmp(no_atual.estado, problema.estado_objetivo):
+                return no_atual
+            # adiciona ao conjunto de nós explorados
+            explorado.add(no_atual)
 
-                    if (peca == 0) and (column_pos > 0):
-                        zero = self.estado_atual[linha_pos][column_pos]
-                        ante = self.estado_atual[linha_pos][column_pos - 1]
-                        self.estado_atual[linha_pos][column_pos] = ante
-                        self.estado_atual[linha_pos][column_pos - 1] = zero
-                        esta_mudado = True
+            # move p/ esquerda
+            move_para_esquerda = problema.transicao(problema.acao.para_esquerda)
+            if move_para_esquerda is not False:
+                fronteira.append(NoArvoreDeBusca(move_para_esquerda, no_atual, problema.acao.esquerda))
 
-            return esta_mudado
+            # move p/ para_cima
+            move_para_cima = problema.transicao(problema.acao.para_cima)
+            if move_para_cima is not False:
+                fronteira.append(NoArvoreDeBusca(move_para_cima, no_atual, problema.acao.para_cima))
 
-    def para_cima(self):
-        esta_mudado = False
-        if self.estado_atual is not None:
+            # move p/ direita
+            move_para_direita = problema.transicao(problema.acao.para_direita)
+            if move_para_direita[0] is not False:
+                fronteira.append(NoArvoreDeBusca(move_para_direita, no_atual, problema.acao.direita))
 
-            for linha_pos, linha in self.estado_atual:
+            # move p/ para_baixo
+            move_para_baixo = problema.transicao(problema.acao.para_baixo)
+            if move_para_baixo[0] is not False:
+                fronteira.append(NoArvoreDeBusca(move_para_baixo, no_atual, problema.acao.para_baixo))
 
-                for column_pos, peca in linha:
 
-                    if peca == 0 and linha_pos > 0:
-                        zero = self.estado_atual[linha_pos][column_pos]
-                        cima = self.estado_atual[linha_pos + 1][column_pos]
-                        self.estado_atual[linha_pos][column_pos] = cima
-                        self.estado_atual[linha_pos + 1][column_pos] = zero
-                        esta_mudado = True
-
-            return esta_mudado
-
-    def para_baixo(self):
-        esta_mudado = False
-        if self.estado_atual is not None:
-            for linha_pos, linha in self.estado_atual:
-
-                for column_pos, peca in linha:
-
-                    if peca == 0 and linha_pos < 2:
-                        print(column_pos)
-                        print(self.estado_atual[linha_pos])
-                        zero = self.estado_atual[linha_pos][column_pos]
-                        baixo = self.estado_atual[linha_pos - 1][column_pos]
-                        self.estado_atual[linha_pos][column_pos] = baixo
-                        self.estado_atual[linha_pos - 1][column_pos] = zero
-                        esta_mudado = True
-
-            return esta_mudado
+def busca_bidirecional(self, problema):
+    pass
