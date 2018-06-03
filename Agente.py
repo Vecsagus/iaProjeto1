@@ -10,9 +10,9 @@ class Agente:
         pass
 
     @staticmethod
-    def esta_explorado(no_atual, lista):
+    def esta_na(lista, estado):
         for item in lista:
-            if item.estado == no_atual.estado:
+            if item.estado == estado:
                 return True
 
         return False
@@ -20,48 +20,40 @@ class Agente:
     def busca_em_amplitude(self, problema):
 
         explorado = set()
-        fronteira = []
+        borda = list()
         no_raiz = NoArvoreDeBusca(problema.estado_inicial, None, None)
-        fronteira.append(no_raiz)
+        borda.insert(0, no_raiz)
+
+        # retorna o estado atual se ele for igual ao objetivo
+        if problema.teste_de_objetivo(no_raiz.estado):
+            return no_raiz
 
         while True:
-            if not len(fronteira):
+            if not len(borda):
                 return -1
             # seleciona e deleta o primeiro elemento da borda
-            no_atual = fronteira[0]
-            del fronteira[0]
+            no_atual = borda[0]
+            borda.remove(no_atual)
+            # adiciona ao conjunto de nós explorados
+            explorado.add(no_atual)
+            print("Qty Explorados ->" + str(len(explorado)))
 
-            # retorna o estado atual se ele for igual ao objetivo
-            if no_atual.estado == problema.estado_objetivo:
-                return no_atual
+            opcoes_possiveis = [
+                problema.acao.para_esquerda,
+                problema.acao.para_cima,
+                problema.acao.para_direita,
+                problema.acao.para_baixo,
+            ]
 
-            print("Explorados")
-            print([item.estado for item in explorado])
-            print("Atual")
-            print(no_atual.estado)
-            if not self.esta_explorado(no_atual, explorado):
-                # adiciona ao conjunto de nós explorados
-                explorado.add(no_atual)
-
-                # move p/ esquerda
-                move_para_esquerda = problema.transicao(problema.estado_atual, problema.acao.para_esquerda)
-                if move_para_esquerda is not False:
-                    fronteira.append(NoArvoreDeBusca(move_para_esquerda, no_atual, problema.acao.para_esquerda))
-
-                # move p/ para_cima
-                move_para_cima = problema.transicao(problema.estado_atual, problema.acao.para_cima)
-                if move_para_cima is not False:
-                    fronteira.append(NoArvoreDeBusca(move_para_cima, no_atual, problema.acao.para_cima))
-
-                # move p/ direita
-                move_para_direita = problema.transicao(problema.estado_atual, problema.acao.para_direita)
-                if move_para_direita is not False:
-                    fronteira.append(NoArvoreDeBusca(move_para_direita, no_atual, problema.acao.para_direita))
-
-                # move p/ para_baixo
-                move_para_baixo = problema.transicao(problema.estado_atual, problema.acao.para_baixo)
-                if move_para_baixo is not False:
-                    fronteira.append(NoArvoreDeBusca(move_para_baixo, no_atual, problema.acao.para_baixo))
+            for acao in opcoes_possiveis:
+                novo_estado = problema.transicao(problema.estado_atual, acao)
+                if novo_estado is not False:
+                    novo_no = NoArvoreDeBusca(novo_estado, no_atual, acao)
+                    if not self.esta_na(explorado, novo_no.estado) or not self.esta_na(borda, novo_no.estado):
+                        # retorna o estado atual se ele for igual ao objetivo
+                        if problema.teste_de_objetivo(novo_no.estado):
+                            return novo_no
+                        borda.append(novo_no)
 
     def busca_bidirecional(self, problema):
         pass

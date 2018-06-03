@@ -1,6 +1,7 @@
 # coding=utf-8
 import random
 from enum import Enum
+import copy
 
 
 class QuebraCabeca:
@@ -29,23 +30,32 @@ class QuebraCabeca:
     # Retorna um novo estado, caso não possa modificar o 0 então retorna False
     #
     def transicao(self, estado, acao):
-        for l, linha in enumerate(estado):  # Linha
+        estado_copy = copy.deepcopy(estado)
+        for l, linha in enumerate(estado_copy):  # Linha
             for c, peca in enumerate(linha):  # Coluna
                 if peca == 0:
                     if acao == self.acao.para_esquerda and (c > 0):
-                        (estado[l][c], estado[l][c - 1]) = (estado[l][c - 1], estado[l][c])
+                        (estado_copy[l][c], estado_copy[l][c - 1]) = (estado_copy[l][c - 1], estado_copy[l][c])
+                        self.estado_atual = estado_copy
+                        return estado_copy
+
                     elif (acao == self.acao.para_cima) and (l > 0):
-                        (estado[l][c], estado[l - 1][c]) = (estado[l - 1][c], estado[l][c])
+                        (estado_copy[l][c], estado_copy[l - 1][c]) = (estado_copy[l - 1][c], estado_copy[l][c])
+                        self.estado_atual = estado_copy
+                        return estado_copy
+
                     elif acao == self.acao.para_direita and (c < 2):
-                        (estado[l][c], estado[l][c + 1]) = (estado[l][c + 1], estado[l][c])
+                        (estado_copy[l][c], estado_copy[l][c + 1]) = (estado_copy[l][c + 1], estado_copy[l][c])
+                        self.estado_atual = estado_copy
+                        return estado_copy
+
                     elif acao == self.acao.para_baixo and (l < 2):
-                        (estado[l][c], estado[l + 1][c]) = (estado[l + 1][c], estado[l][c])
-                        pass
+                        (estado_copy[l][c], estado_copy[l + 1][c]) = (estado_copy[l + 1][c], estado_copy[l][c])
+                        self.estado_atual = estado_copy
+                        return estado_copy
+
                     else:
                         return False
-
-        self.estado_atual = estado
-        return estado
 
     def teste_de_objetivo(self, estado):
         return self.estado_objetivo == estado
