@@ -35,6 +35,9 @@ class Agente:
         explorado = list()
         borda.insert(0, no_raiz)
 
+        print("Estado inicial")
+        print(jogo.estado_inicial)
+
         # retorna o estado atual se ele for igual ao objetivo
         if jogo.teste_de_objetivo(no_raiz.estado):
             return no_raiz

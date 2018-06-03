@@ -1,8 +1,8 @@
 # coding=utf-8
 from QuebraCabeca import QuebraCabeca
 from Agente import Agente
-
-novo_quebra_cabeca = QuebraCabeca([[5, 3, 2], [1, 0, 4], [6, 7, 8]])
+modelo = [[5, 3, 2], [1, 0, 4], [6, 7, 8]]
+novo_quebra_cabeca = QuebraCabeca()
 agente = Agente()
 resultado = agente.busca_em_amplitude(novo_quebra_cabeca)
 print(resultado)
