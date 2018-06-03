@@ -39,18 +39,52 @@ class ProblemaQuebraCabeca:
     def teste_de_objetivo(self, estado):
         return cmp(self.estado_objetivo, estado)
 
-class NoArvoreDeBusca():
+    def imprime(estado):
+        for linha in estado:
+            print("-------")
+            for coluna in linha:
+                print("|" + str(coluna), end="")
+            print("|")
+        print("-------")
+
+class NoArvoreDeBusca:
     def __init__(self, estado, pai, acao):
         self.estado = estado
         self.pai = pai
         slef. acao = acao
 
 def busca_em_amplitude(problema):
+    explorado = set()
+    borda = []
+    no_raiz = NoArvoreDeBusca(problema.estado_inicial, None, None)
+    borda.append(no_raiz)
+
+    while(True):
+        if not len(borda):
+            return -1
+        # seleciona e deleta o primeiro elemento da borda
+        no_atual = borda[0]
+        del borda[0]
+        # retorna o estado atual se ele for igual ao objetivo
+        return no_atual if cmp(no_atual.estado, problema.estado_objetivo) 
+        # adiciona ao conjunto de nós explorados    
+        explorado.add(no_atual)
+        #### Expandir noh
+        # move p/ esquerda
+        trans_esquerda = problema.transicao(problema.acao.esquerda)
+        borda.append(NoArvoreDeBusca(trans_esquerda, no_atual, problema.acao.esquerda)) if trans_esquerda[0] != -1) else None
+        # move p/ para_cima
+        trans_para_cima = problema.transicao(problema.acao.para_cima)
+        borda.append(NoArvoreDeBusca(trans_para_cima, no_atual, problema.acao.para_cima)) if trans_para_cima[0] != -1) else None
+        # move p/ direita
+        trans_direita = problema.transicao(problema.acao.direita)
+        borda.append(NoArvoreDeBusca(trans_direita, no_atual, problema.acao.direita)) if trans_direita[0] != -1) else None
+        # move p/ para_baixo
+        trans_para_baixo = problema.transicao(problema.acao.para_baixo)
+        borda.append(NoArvoreDeBusca(trans_para_baixo, no_atual, problema.acao.para_baixo)) if trans_para_baixo[0] != -1) else None
+
+def busca_bidirecional(problema):
     pass
-    '''explorado, borda = set()
-    borda.add(problema.estado_inicial)'''
-
-
 
 
 
