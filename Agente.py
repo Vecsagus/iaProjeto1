@@ -3,8 +3,8 @@ from ArvoreDeBusca import NoArvoreDeBusca
 
 
 class Agente:
-    fronteira_amplitude_1 = None
-    fronteira_amplitude_2 = None
+    borda_amplitude_1 = None
+    borda_amplitude_2 = None
 
     def __init__(self):
         pass
@@ -25,11 +25,14 @@ class Agente:
 
         return False
 
+    #
+    # Busca em amplitude
+    #
     def busca_em_amplitude(self, jogo):
 
-        explorado = list()
-        borda = list()
         no_raiz = NoArvoreDeBusca(jogo.estado_inicial, None, None)
+        borda = list()
+        explorado = list()
         borda.insert(0, no_raiz)
 
         # retorna o estado atual se ele for igual ao objetivo
@@ -37,9 +40,8 @@ class Agente:
             return no_raiz
 
         while True:
-            if not len(borda):
+            if len(borda) == 0:
                 return -1
-
             # seleciona e deleta o primeiro elemento da borda
             no_atual = borda[0]
             borda.remove(no_atual)
