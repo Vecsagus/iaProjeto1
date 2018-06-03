@@ -17,15 +17,15 @@ class Agente:
 
         return False
 
-    def busca_em_amplitude(self, problema):
+    def busca_em_amplitude(self, jogo):
 
         explorado = set()
         borda = list()
-        no_raiz = NoArvoreDeBusca(problema.estado_inicial, None, None)
+        no_raiz = NoArvoreDeBusca(jogo.estado_inicial, None, None)
         borda.insert(0, no_raiz)
 
         # retorna o estado atual se ele for igual ao objetivo
-        if problema.teste_de_objetivo(no_raiz.estado):
+        if jogo.teste_de_objetivo(no_raiz.estado):
             return no_raiz
 
         while True:
@@ -38,20 +38,13 @@ class Agente:
             explorado.add(no_atual)
             print("Qty Explorados ->" + str(len(explorado)))
 
-            opcoes_possiveis = [
-                problema.acao.para_esquerda,
-                problema.acao.para_cima,
-                problema.acao.para_direita,
-                problema.acao.para_baixo,
-            ]
-
-            for acao in opcoes_possiveis:
-                novo_estado = problema.transicao(problema.estado_atual, acao)
+            for acao in jogo.get_opcoes_possiveis():
+                novo_estado = jogo.transicao(jogo.estado_atual, acao)
                 if novo_estado is not False:
                     novo_no = NoArvoreDeBusca(novo_estado, no_atual, acao)
                     if not self.esta_na(explorado, novo_no.estado) or not self.esta_na(borda, novo_no.estado):
                         # retorna o estado atual se ele for igual ao objetivo
-                        if problema.teste_de_objetivo(novo_no.estado):
+                        if jogo.teste_de_objetivo(novo_no.estado):
                             return novo_no
                         borda.append(novo_no)
 

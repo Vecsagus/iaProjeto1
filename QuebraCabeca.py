@@ -8,12 +8,22 @@ class QuebraCabeca:
     estado_objetivo = None
     estado_inicial = None
     estado_atual = None
+    opcoes_possiveis = []
 
     def __init__(self, estado_inicial=None):
         self.estado_objetivo = [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
         self.estado_inicial = estado_inicial if not None else self.gera_estado_inicial()
         self.estado_atual = estado_inicial
         self.acao = Enum('Acao', 'para_esquerda para_cima para_direita para_baixo')
+        self.opcoes_possiveis = [
+            self.acao.para_esquerda,
+            self.acao.para_cima,
+            self.acao.para_direita,
+            self.acao.para_baixo,
+        ]
+
+    def get_opcoes_possiveis(self):
+        return self.opcoes_possiveis
 
     @staticmethod
     def gera_estado_inicial():
