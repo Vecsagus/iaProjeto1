@@ -22,13 +22,10 @@ class QuebraCabeca:
         return estado_inicial
 
     def para_direita(self):
-        linha_pos = 0
-        column_pos = 0
         esta_mudado = False
         if self.estado_atual is not None:
-            for linha in self.estado_atual:
-
-                for peca in linha:
+            for linha_pos, linha in enumerate(self.estado_atual):
+                for column_pos, peca in enumerate(linha):
 
                     if peca == 0 and column_pos < 2:
                         zero = self.estado_atual[linha_pos][column_pos]
@@ -36,23 +33,15 @@ class QuebraCabeca:
                         self.estado_atual[linha_pos][column_pos] = prox
                         self.estado_atual[linha_pos][column_pos + 1] = zero
                         esta_mudado = True
-                        column_pos += 1
-
-                    column_pos = 0
-                    linha_pos += 1
-
-                linha_pos = 0
 
             return esta_mudado
 
     def para_esquerda(self):
-        linha_pos = 0
-        column_pos = 0
         esta_mudado = False
         if self.estado_atual is not None:
-            for linha in self.estado_atual:
+            for linha_pos, linha in enumerate(self.estado_atual):
 
-                for peca in linha:
+                for column_pos, peca in enumerate(linha):
 
                     if (peca == 0) and (column_pos > 0):
                         zero = self.estado_atual[linha_pos][column_pos]
@@ -60,18 +49,10 @@ class QuebraCabeca:
                         self.estado_atual[linha_pos][column_pos] = ante
                         self.estado_atual[linha_pos][column_pos - 1] = zero
                         esta_mudado = True
-                        column_pos += 1
-
-                    column_pos = 0
-                    linha_pos += 1
-
-                linha_pos = 0
 
             return esta_mudado
 
     def para_cima(self):
-        linha_pos = 0
-        column_pos = 0
         esta_mudado = False
         if self.estado_atual is not None:
 
@@ -86,23 +67,14 @@ class QuebraCabeca:
                         self.estado_atual[linha_pos + 1][column_pos] = zero
                         esta_mudado = True
 
-                        column_pos += 1
-
-                    column_pos = 0
-                    linha_pos += 1
-
-                linha_pos = 0
-
             return esta_mudado
 
     def para_baixo(self):
-        linha_pos = 0
-        column_pos = 0
         esta_mudado = False
         if self.estado_atual is not None:
-            for linha in self.estado_atual:
+            for linha_pos, linha in self.estado_atual:
 
-                for peca in linha:
+                for column_pos, peca in linha:
 
                     if peca == 0 and linha_pos < 2:
                         print(column_pos)
@@ -112,10 +84,5 @@ class QuebraCabeca:
                         self.estado_atual[linha_pos][column_pos] = baixo
                         self.estado_atual[linha_pos - 1][column_pos] = zero
                         esta_mudado = True
-
-                    column_pos += 1
-                column_pos = 0
-                linha_pos += 1
-            linha_pos = 0
 
             return esta_mudado
