@@ -40,12 +40,16 @@ class Agente:
 
             for acao in jogo.get_opcoes_possiveis():
                 novo_estado = jogo.transicao(jogo.estado_atual, acao)
+
                 if novo_estado is not False:
                     novo_no = NoArvoreDeBusca(novo_estado, no_atual, acao)
+
                     if not self.esta_na(explorado, novo_no.estado) or not self.esta_na(borda, novo_no.estado):
+
                         # retorna o estado atual se ele for igual ao objetivo
                         if jogo.teste_de_objetivo(novo_no.estado):
                             return novo_no
+
                         borda.append(novo_no)
 
     def busca_bidirecional(self, problema):
