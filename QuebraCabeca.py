@@ -9,9 +9,9 @@ class QuebraCabeca:
         self.estado_inicial = estado_inicial if not None else self.gera_estado_inicial()
         self.acao = Enum('Acao', 'para_esquerda para_cima para_direita para_baixo')
         self.opcoes_possiveis = [
-            self.acao.para_esquerda,
             self.acao.para_cima,
             self.acao.para_direita,
+            self.acao.para_esquerda,
             self.acao.para_baixo,
         ]
 
