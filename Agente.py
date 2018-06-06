@@ -9,22 +9,6 @@ class Agente:
     def __init__(self):
         pass
 
-    @staticmethod
-    def esta_na_borda(lista, estado):
-        for item in lista:
-            if item.estado == estado:
-                return True
-
-        return False
-
-    @staticmethod
-    def esta_explorado(lista, estado):
-        for item in lista:
-            if item == estado:
-                return True
-
-        return False
-
     #
     # Busca em amplitude
     #
@@ -33,9 +17,6 @@ class Agente:
         borda = []
         explorado = set()
         borda.insert(0, no_raiz)
-
-        print("Estado inicial")
-        print(jogo.estado_inicial)
 
         # retorna o estado atual se ele for igual ao objetivo
         if problema.teste_de_objetivo(no_raiz.estado):
