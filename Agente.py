@@ -10,20 +10,20 @@ class Agente:
         pass
 
     @staticmethod
-    def esta_na_borda(lista, estado):
-        for item in lista:
-            if item.estado == estado:
-                return True
-
-        return False
+    def nao_esta_na_borda(lista, no):
+        try:
+            lista.index(no)
+            return False
+        except Exception:
+            return True
 
     @staticmethod
-    def esta_explorado(lista, estado):
-        for item in lista:
-            if item == estado:
-                return True
-
-        return False
+    def nao_esta_explorado(lista, estado):
+        try:
+            lista.index(estado)
+            return False
+        except Exception:
+            return True
 
     #
     # Busca em amplitude
@@ -32,8 +32,8 @@ class Agente:
 
         no_raiz = NoArvoreDeBusca(jogo.estado_inicial, None, None)
         borda = list()
-        explorado = set()
-        borda.insert(0, no_raiz)
+        explorado = list()
+        borda.append(no_raiz)
 
         # retorna o estado atual se ele for igual ao objetivo
         if jogo.teste_de_objetivo(no_raiz.estado):
@@ -42,26 +42,41 @@ class Agente:
         while True:
             if len(borda) == 0:
                 return -1
-            # seleciona e deleta o primeiro elemento da borda
+            # seleciona o primeiro item da fila
             no_atual = borda[0]
-            borda.remove(no_atual)
+
+            # Remove o primeiro item da fila
+            del borda[0]
+            print(str(len(explorado)))
             # adiciona ao conjunto de nós explorados
-            explorado.add(no_atual.estado)
-            print("Qty Explorados ->" + str(len(explorado)))
+            explorado.append(no_atual.estado)
 
             for acao in jogo.get_opcoes_possiveis():
-                novo_estado = jogo.transicao(jogo.estado_atual, acao)
+                novo_estado = jogo.transicao(no_atual.estado, acao)
 
                 if novo_estado is not False:
                     filho = NoArvoreDeBusca(novo_estado, no_atual, acao)
-
-                    if not self.esta_explorado(explorado, filho.estado) or not self.esta_na_borda(borda, filho.estado):
-
+                    if self.nao_esta_explorado(explorado, filho.estado) or self.nao_esta_na_borda(borda, filho):
                         # retorna o estado atual se ele for igual ao objetivo
                         if jogo.teste_de_objetivo(filho.estado):
                             return filho
 
                         borda.append(filho)
+
+    #
+    # Busca em profundidade limitada
+    #
+    def busca_em_profundidade_limitada(self, problema, limite):
+        return self.bpl_recursiva(NoArvoreDeBusca(problema.estado_inicial, None, None), problema, limite)
+
+    def bpl_recursiva(self, no, problema, limite):
+        if problema.teste_de_objetivo(no.estado):
+            return no
+        elif limite == 0:
+            return no
+        else:
+            pass
+
 
     def busca_bidirecional(self, problema):
         pass

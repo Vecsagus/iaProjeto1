@@ -7,7 +7,6 @@ import copy
 class QuebraCabeca:
     estado_objetivo = None
     estado_inicial = None
-    estado_atual = None
     opcoes_possiveis = None
 
     def __init__(self, estado_inicial=None):
@@ -18,7 +17,6 @@ class QuebraCabeca:
         else:
             self.estado_inicial = estado_inicial
 
-        self.estado_atual = self.estado_inicial
         self.acao = Enum('Acao', 'para_esquerda para_cima para_direita para_baixo')
         self.opcoes_possiveis = [
             self.acao.para_cima,
@@ -51,24 +49,16 @@ class QuebraCabeca:
                 if peca == 0:
                     if acao == self.acao.para_esquerda and (c > 0):
                         (estado_copy[l][c], estado_copy[l][c - 1]) = (estado_copy[l][c - 1], estado_copy[l][c])
-                        self.estado_atual = estado_copy
                         return estado_copy
-
                     elif (acao == self.acao.para_cima) and (l > 0):
                         (estado_copy[l][c], estado_copy[l - 1][c]) = (estado_copy[l - 1][c], estado_copy[l][c])
-                        self.estado_atual = estado_copy
                         return estado_copy
-
                     elif acao == self.acao.para_direita and (c < 2):
                         (estado_copy[l][c], estado_copy[l][c + 1]) = (estado_copy[l][c + 1], estado_copy[l][c])
-                        self.estado_atual = estado_copy
                         return estado_copy
-
                     elif acao == self.acao.para_baixo and (l < 2):
                         (estado_copy[l][c], estado_copy[l + 1][c]) = (estado_copy[l + 1][c], estado_copy[l][c])
-                        self.estado_atual = estado_copy
                         return estado_copy
-
                     else:
                         return False
 
