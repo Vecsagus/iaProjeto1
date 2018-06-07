@@ -16,7 +16,7 @@ class Agente:
         no_raiz = NoArvoreDeBusca(problema.estado_inicial, None, None)
         borda = []
         explorado = set()
-        borda.insert(0, no_raiz)
+        borda.append(borda)
 
         # retorna o estado atual se ele for igual ao objetivo
         if problema.teste_de_objetivo(no_raiz.estado):
