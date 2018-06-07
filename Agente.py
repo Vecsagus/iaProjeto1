@@ -31,8 +31,8 @@ class Agente:
     def busca_em_amplitude(self, jogo):
 
         no_raiz = NoArvoreDeBusca(jogo.estado_inicial, None, None)
-        borda = list()
-        explorado = list()
+        borda = []
+        explorado = []
         borda.append(no_raiz)
 
         # retorna o estado atual se ele for igual ao objetivo
@@ -47,21 +47,24 @@ class Agente:
 
             # Remove o primeiro item da fila
             del borda[0]
+
             print(str(len(explorado)))
+
             # adiciona ao conjunto de nós explorados
-            explorado.append(no_atual.estado)
+            if no_atual.estado not in explorado:
+                explorado.append(no_atual.estado)
 
-            for acao in jogo.get_opcoes_possiveis():
-                novo_estado = jogo.transicao(no_atual.estado, acao)
+                for acao in jogo.get_opcoes_possiveis():
+                    novo_estado = jogo.transicao(no_atual.estado, acao)
 
-                if novo_estado is not False:
-                    filho = NoArvoreDeBusca(novo_estado, no_atual, acao)
-                    if self.nao_esta_explorado(explorado, filho.estado) or self.nao_esta_na_borda(borda, filho):
-                        # retorna o estado atual se ele for igual ao objetivo
-                        if jogo.teste_de_objetivo(filho.estado):
-                            return filho
+                    if novo_estado is not False:
+                        filho = NoArvoreDeBusca(novo_estado, no_atual, acao)
+                        if filho not in borda:
+                            # retorna o estado atual se ele for igual ao objetivo
+                            if jogo.teste_de_objetivo(filho.estado):
+                                return filho
 
-                        borda.append(filho)
+                            borda.append(filho)
 
     #
     # Busca em profundidade limitada
@@ -76,7 +79,6 @@ class Agente:
             return no
         else:
             pass
-
 
     def busca_bidirecional(self, problema):
         pass
