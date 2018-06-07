@@ -9,34 +9,17 @@ class Agente:
     def __init__(self):
         pass
 
-    @staticmethod
-    def nao_esta_na_borda(lista, no):
-        try:
-            lista.index(no)
-            return False
-        except Exception:
-            return True
-
-    @staticmethod
-    def nao_esta_explorado(lista, estado):
-        try:
-            lista.index(estado)
-            return False
-        except Exception:
-            return True
-
     #
     # Busca em amplitude
     #
-    def busca_em_amplitude(self, jogo):
-
-        no_raiz = NoArvoreDeBusca(jogo.estado_inicial, None, None)
+    def busca_em_amplitude(self, problema):
+        no_raiz = NoArvoreDeBusca(problema.estado_inicial, None, None)
         borda = []
-        explorado = []
-        borda.append(no_raiz)
+        explorado = set()
+        borda.insert(0, no_raiz)
 
         # retorna o estado atual se ele for igual ao objetivo
-        if jogo.teste_de_objetivo(no_raiz.estado):
+        if problema.teste_de_objetivo(no_raiz.estado):
             return no_raiz
 
         while True:
@@ -44,27 +27,26 @@ class Agente:
                 return -1
             # seleciona o primeiro item da fila
             no_atual = borda[0]
-
-            # Remove o primeiro item da fila
             del borda[0]
-
-            print(str(len(explorado)))
-
-            # adiciona ao conjunto de nós explorados
-            if no_atual.estado not in explorado:
-                explorado.append(no_atual.estado)
-
-                for acao in jogo.get_opcoes_possiveis():
-                    novo_estado = jogo.transicao(no_atual.estado, acao)
-
-                    if novo_estado is not False:
-                        filho = NoArvoreDeBusca(novo_estado, no_atual, acao)
-                        if filho not in borda:
-                            # retorna o estado atual se ele for igual ao objetivo
-                            if jogo.teste_de_objetivo(filho.estado):
-                                return filho
-
-                            borda.append(filho)
+            # cria string identificadora do estado
+            estado_id = "".join(["".join([str(letra) for letra in linha]) for linha in no_atual.estado])
+            # adiciona identificador de estado aos explorados
+            explorado.add(estado_id)
+            print("Qty Explorados ->" + str(len(explorado)))
+            for acao in problema.get_opcoes_possiveis():
+                novo_estado = problema.transicao(no_atual.estado, acao)
+                # verifica se a ação gerou um novo estado
+                if novo_estado:
+                    # cria um no na arvore para o novo estado
+                    filho = NoArvoreDeBusca(novo_estado, no_atual, acao)
+                    # cria identificador para o novo estado
+                    novo_estado_id = "".join(["".join([str(letra) for letra in linha]) for linha in novo_estado])
+                    # verifica se o novo estado nao esta na lista de estados explorados
+                    if (novo_estado_id not in explorado) and (filho not in borda):
+                        # retorna o estado atual se ele for igual ao objetivo
+                        if problema.teste_de_objetivo(filho.estado):
+                            return filho
+                        borda.append(filho)
 
     #
     # Busca em profundidade limitada
