@@ -39,6 +39,7 @@ class Agente:
 
             if len(borda) == 0:
                 return -1
+
             # seleciona o primeiro item da fila
             no_atual = borda[0]
             del borda[0]
