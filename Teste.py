@@ -8,8 +8,11 @@ novo_quebra_cabeca = QuebraCabeca()
 
 # novo_quebra_cabeca = QuebraCabeca(modelo)
 agente = Agente()
-resultado = agente.busca_em_amplitude(novo_quebra_cabeca)
-print(resultado)
+# resultado = agente.busca_em_amplitude(novo_quebra_cabeca)
+
+
+resultado = agente.busca_de_aprofundamento_iterativo(novo_quebra_cabeca)
+print(resultado.estado)
 
 #
 # novo_quebra_cabeca = QuebraCabeca()

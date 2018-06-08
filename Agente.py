@@ -48,6 +48,15 @@ class Agente:
                             return filho
                         borda.append(filho)
 
+    def busca_de_aprofundamento_iterativo(self, problema):
+        cont = 1
+        while True:
+            print(cont)
+            resultado = self.busca_em_profundidade_limitada(problema, cont)
+            cont += 1
+            if resultado != 'corte':
+                return resultado
+
     #
     # Busca em profundidade limitada
     #
@@ -58,9 +67,23 @@ class Agente:
         if problema.teste_de_objetivo(no.estado):
             return no
         elif limite == 0:
-            return no
+            return 'corte'
         else:
-            pass
+            teve_corte = False
+            for acao in problema.get_opcoes_possiveis():
+                novo_estado = problema.transicao(no.estado, acao)
+                if novo_estado:
+                    filho = NoArvoreDeBusca(novo_estado, no, acao)
+                    resultado = self.bpl_recursiva(filho, problema, limite - 1)
+                    if resultado == 'corte':
+                        teve_corte = True
+                    elif resultado != -1:
+                        return resultado
+
+            if teve_corte:
+                return 'corte'
+            else:
+                return -1
 
     def busca_bidirecional(self, problema):
         pass
