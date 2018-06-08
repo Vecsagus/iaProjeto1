@@ -3,8 +3,9 @@ from ArvoreDeBusca import NoArvoreDeBusca
 
 
 class Agente:
-    borda_amplitude_1 = None
-    borda_amplitude_2 = None
+    borda_amplitude_1 = []
+    borda_amplitude_2 = []
+    borda_interativa_1 = []
 
     def __init__(self):
         pass
@@ -16,7 +17,7 @@ class Agente:
         no_raiz = NoArvoreDeBusca(problema.estado_inicial, None, None)
         borda = []
         explorado = set()
-        borda.append(borda)
+        borda.append(no_raiz)
 
         # retorna o estado atual se ele for igual ao objetivo
         if problema.teste_de_objetivo(no_raiz.estado):
@@ -46,6 +47,7 @@ class Agente:
                         # retorna o estado atual se ele for igual ao objetivo
                         if problema.teste_de_objetivo(filho.estado):
                             return filho
+                        self.borda_amplitude_1.append(filho)
                         borda.append(filho)
 
     def busca_de_aprofundamento_iterativo(self, problema):
@@ -74,6 +76,9 @@ class Agente:
                 novo_estado = problema.transicao(no.estado, acao)
                 if novo_estado:
                     filho = NoArvoreDeBusca(novo_estado, no, acao)
+                    if filho not in self.borda_interativa_1:
+                        self.borda_interativa_1.append(filho)
+
                     resultado = self.bpl_recursiva(filho, problema, limite - 1)
                     if resultado == 'corte':
                         teve_corte = True
@@ -85,5 +90,9 @@ class Agente:
             else:
                 return -1
 
-    def busca_bidirecional(self, problema):
-        pass
+    def busca_bidirecional(self, problema_do_inicio, problema_do_final):
+        self.busca_em_amplitude(problema_do_inicio)
+        resultado = self.busca_de_aprofundamento_iterativo(problema_do_final)
+
+        if self.borda_interativa_1 == self.borda_amplitude_1:
+            return resultado

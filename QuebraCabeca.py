@@ -56,6 +56,7 @@ class QuebraCabeca:
     def teste_de_objetivo(self, estado):
         return self.estado_objetivo == estado
 
+
     def imprime(self, estado):
         for linha in estado:
             print("-------")
