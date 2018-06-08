@@ -4,7 +4,7 @@ from Agente import Agente
 
 modelo = [[5, 3, 2], [1, 0, 4], [6, 7, 8]]
 modelo31 = [[1, 4, 2], [3, 5, 8], [6, 0, 7]]
-novo_quebra_cabeca = QuebraCabeca()
+novo_quebra_cabeca = QuebraCabeca([[0, 1, 2], [3, 7, 5], [6, 4, 8]])
 final_quebra_cabeca = QuebraCabeca([[0, 1, 2], [3, 4, 5], [6, 7, 8]])
 
 # novo_quebra_cabeca = QuebraCabeca(modelo)
