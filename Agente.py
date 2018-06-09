@@ -1,129 +1,67 @@
 # coding=utf-8
-from ArvoreDeBusca import NoArvoreDeBusca
-from ThreadAmplitude import ThreadAmplitude
-from ThreadAmplitudeReversa import ThreadAmplitudeReversa
+class Busca:
+    def __init__(self, raiz):
+        self.borda = [raiz]
+        self.explorado = set('''adicionar ideintificador do estado inicial da raiz''')
+
+def solucao(no, inicio = True):
+    if inicio:
+        acoes_solucao = []
+    if not no.pai:
+        acoes_solucao = [no.acao]
+        return acoes_solucao
+    acoes_solucao += solucao(no.pai, False)
+
+def solucao_bidirecional(no_indo, no_vindo):
+    if no_indo.estado != no_vindo.estado:
+        return -1
+    segunda_metade = solucao(no_vindo, None)[::-1]
+    del segunda_metade[0]
+    solucao = solucao(no_indo, None) + segunda_metade
+    return solucao
+    
+# Transformar essa funcao em metodo da classe QuebraCabeca
+def expande(problema, busca):
+    if len(busca.borda) == 0:
+        return -1
+    no_atual = busca.borda[0]
+    del busca.borda[0]
+    # gera identificador do estado
+    estado_id = "".join(["".join([str(letra) for letra in linha]) for linha in no_atual.estado])
+    # adiciona identificador de estado aos busca.explorados
+    busca.explorado.add(estado_id)
+    
+    for acao in problema.get_opcoes_possiveis():
+        novo_estado = problema.transicao(no.estado, acao)
+        # verifica se a ação gerou um novo estado
+        if novo_estado:
+            # cria um no na arvore para o novo estado
+            filho = NoArvoreDeBusca(novo_estado, no_atual, acao)
+            # cria identificador para o novo estado
+            novo_estado_id = "".join(["".join([str(letra) for letra in linha]) for linha in novo_estado])
+            # verifica se o novo estado nao esta na lista de estados busca.explorados
+            if (novo_estado_id not in busca.explorado) and (filho not in busca.borda):
+                busca.borda.append(filho)
+                return busca.borda
+
+def busca_bidirecional(problema):
+    if problema.estado_inicial == problema.estado_objetivo:
+        return problema.estado_objetivo
+    raiz_da_busca_indo = NoArvoreDeBusca(problema.estado_inicial, None, None)
+    raiz_da_busca_vindo = NoArvoreDeBusca(problema.estado_objetivo, None, None)
+    busca_indo = Busca(raiz_da_busca_indo)
+    busca_vindo = Busca(raiz_da_busca_vindo)
+
+    
+    while True:
+        borda_indo = expande(problema, busca_indo)
+        borda_vindo = expande(problema, busca_vindo)
+        if (not borda_indo) or (not borda_vindo):
+            return -1
+        for noV, noI in zip(borda_indo, borda_vindo):
+            if noV.estado == noI.estado:
+                return solucao_bidirecional(noV, noI)
 
 
-class Agente:
-    borda_amplitude_1 = []
-    borda_amplitude_2 = []
-    estado_atual = None
 
-    def __init__(self):
-        pass
-
-    def get_borda_amplitude(self):
-        return self.borda_amplitude_1
-
-    def get_borda_amplitude2(self):
-        return self.borda_amplitude_2
-
-    #
-    # Busca em amplitude
-    #
-    def busca_em_amplitude(self, problema):
-        no_raiz = NoArvoreDeBusca(problema.estado_inicial, None, None)
-        borda = []
-        explorado = set()
-        borda.append(no_raiz)
-
-        # retorna o estado atual se ele for igual ao objetivo
-        if problema.teste_de_objetivo(no_raiz.estado):
-            return no_raiz
-
-        while True:
-
-            if (self.get_borda_amplitude() == self.get_borda_amplitude2()) \
-                    and (len(self.get_borda_amplitude()) > 0 and len(self.get_borda_amplitude2()) > 0):
-                return self.estado_atual
-
-            if len(borda) == 0:
-                return -1
-
-            # seleciona o primeiro item da fila
-            no_atual = borda[0]
-            del borda[0]
-            # cria string identificadora do estado
-            estado_id = "".join(["".join([str(letra) for letra in linha]) for linha in no_atual.estado])
-            # adiciona identificador de estado aos explorados
-            explorado.add(estado_id)
-            print("Qty Explorados Thread normaly ->" + str(len(explorado)))
-            for acao in problema.get_opcoes_possiveis():
-                novo_estado = problema.transicao(no_atual.estado, acao)
-                # verifica se a ação gerou um novo estado
-                if novo_estado:
-                    # cria um no na arvore para o novo estado
-                    filho = NoArvoreDeBusca(novo_estado, no_atual, acao)
-                    # cria identificador para o novo estado
-                    novo_estado_id = "".join(["".join([str(letra) for letra in linha]) for linha in novo_estado])
-                    # verifica se o novo estado nao esta na lista de estados explorados
-                    if (novo_estado_id not in explorado) and (filho not in borda):
-                        # retorna o estado atual se ele for igual ao objetivo
-                        if problema.teste_de_objetivo(filho.estado):
-                            return filho
-                        self.borda_amplitude_1.append(filho)
-                        self.estado_atual = filho
-                        borda.append(filho)
-
-        #
-        # Busca em amplitude
-        #
-
-    def busca_em_amplitude_reversa(self, problema):
-        no_raiz = NoArvoreDeBusca(problema.estado_inicial, None, None)
-        borda = []
-        explorado = set()
-        borda.append(no_raiz)
-
-        while True:
-            if (self.get_borda_amplitude() == self.get_borda_amplitude2()) \
-                    and (len(self.get_borda_amplitude()) > 0 and len(self.get_borda_amplitude2()) > 0):
-                return self.estado_atual
-
-            if len(borda) == 0:
-                return -1
-            # seleciona o primeiro item da fila
-            no_atual = borda[0]
-            del borda[0]
-            # cria string identificadora do estado
-            estado_id = "".join(["".join([str(letra) for letra in linha]) for linha in no_atual.estado])
-            # adiciona identificador de estado aos explorados
-            explorado.add(estado_id)
-            print("Qty Explorados Thread Reversa ->" + str(len(explorado)))
-            for acao in problema.get_opcoes_possiveis():
-                novo_estado = problema.transicao(no_atual.estado, acao)
-                # verifica se a ação gerou um novo estado
-                if novo_estado:
-                    # cria um no na arvore para o novo estado
-                    filho = NoArvoreDeBusca(novo_estado, no_atual, acao)
-                    # cria identificador para o novo estado
-                    novo_estado_id = "".join(["".join([str(letra) for letra in linha]) for linha in novo_estado])
-                    # verifica se o novo estado nao esta na lista de estados explorados
-                    if (novo_estado_id not in explorado) and (filho not in borda):
-                        # retorna o estado atual se ele for igual ao objetivo
-                        self.borda_amplitude_2.append(filho)
-                        self.estado_atual = filho
-                        borda.append(filho)
-
-    #
-    # Busca Bi-Direcional
-    #
-    def busca_bidirecional(self, problema_do_inicio, problema_do_final):
-
-        threads = []
-
-        thread1 = ThreadAmplitude(1, self, problema_do_inicio)
-        thread2 = ThreadAmplitudeReversa(2, self, problema_do_final)
-
-        try:
-            thread1.start()
-            thread2.start()
-            threads.append(thread1)
-            threads.append(thread2)
-
-            for t in threads:
-                t.join()
-
-        except Exception as ex:
-            print(ex.message)
-            return self.estado_atual
+    
