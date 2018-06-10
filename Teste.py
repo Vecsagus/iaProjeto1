@@ -4,7 +4,7 @@ from Agente import busca_bidirecional
 
 modelo = [[5, 3, 2], [1, 0, 4], [6, 7, 8]]
 modelo31 = [[1, 4, 2], [3, 5, 8], [6, 0, 7]]
-quebra_cabeca = QuebraCabeca(modelo31)
+quebra_cabeca = QuebraCabeca(modelo)
 
 solucao = busca_bidirecional(quebra_cabeca)
 print(solucao)

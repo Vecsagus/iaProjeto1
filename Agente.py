@@ -76,7 +76,7 @@ def expande_em_largura(problema, busca):
     # adiciona nó ao conjunto de nós explorados
     busca.foi_explorado(no_atual.estado)
     
-    print("    Estados filhos:")
+    #print("    Estados filhos:")
     for acao in problema.get_opcoes_possiveis():
         novo_estado = problema.transicao(no_atual.estado, acao)
         # verifica se a ação gerou um novo estado
@@ -84,27 +84,28 @@ def expande_em_largura(problema, busca):
             # cria um no na arvore para o novo estado
             filho = NoArvoreDeBusca(novo_estado, no_atual, acao)
             # adiciona nó na borda
-            if busca.adiciona_na_borda(filho):
-                print("        " + str(novo_estado))
+            '''if '''
+            busca.adiciona_na_borda(filho)
+                #print("        " + str(novo_estado))
     return busca.borda
 
 def busca_bidirecional(problema):
     if problema.estado_inicial == problema.estado_objetivo:
         return problema.estado_objetivo
-    print("Estado inicial:")
-    print(problema.estado_inicial)
+    #print("Estado inicial:")
+    #print(problema.estado_inicial)
     raiz_da_busca_indo = NoArvoreDeBusca(problema.estado_inicial, None, None)
     raiz_da_busca_vindo = NoArvoreDeBusca(problema.estado_objetivo, None, None)
     busca_indo = Busca(raiz_da_busca_indo)
     busca_vindo = Busca(raiz_da_busca_vindo)
     
     while True:
-        print("Busca indo: ")
-        print("    " + str(busca_indo.borda[0][0].estado))
+        #print("Busca indo: ")
+        #print("    " + str(busca_indo.borda[0][0].estado))
         borda_indo = expande_em_largura(problema, busca_indo)
         print("    Explorados indo: " + str(len(busca_indo.explorado)))
-        print("Busca vindo: ")
-        print("    " + str(busca_vindo.borda[0][0].estado))
+        #print("Busca vindo: ")
+        #print("    " + str(busca_vindo.borda[0][0].estado))
         borda_vindo = expande_em_largura(problema, busca_vindo)
         print("    Explorados vindo: " + str(len(busca_vindo.explorado)))
         if (not borda_indo) or (not borda_vindo):
@@ -112,7 +113,7 @@ def busca_bidirecional(problema):
 
         for itemBI in borda_indo:
             if itemBI[1] in [itemBV[1] for itemBV in borda_vindo]:
-                print("Estado da intersecção de buscas: " + str(itemBI[0].estado))
+                #print("Estado da intersecção de buscas: " + str(itemBI[0].estado))
                 identificador = itemBI[1]
                 noBI = busca_indo.acha_no_por_id(identificador)
                 noBV = busca_vindo.acha_no_por_id(identificador)
