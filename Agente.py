@@ -19,7 +19,7 @@ class Busca:
         self.explorado.add(no_id)
 
     def gera_id_de_estado(self, estado):
-        return "".join(["".join([str(letra) for letra in linha]) for linha in estado])
+        return int("".join(["".join([str(letra) for letra in linha]) for linha in estado]))
 
     def acha_no_por_id(self, identificador):
         for item in self.borda:
