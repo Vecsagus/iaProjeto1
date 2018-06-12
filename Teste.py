@@ -1,19 +1,14 @@
 # coding=utf-8
 from QuebraCabeca import QuebraCabeca
-from Agente import Agente
+from Agente import busca_bidirecional
 
 modelo = [[5, 3, 2], [1, 0, 4], [6, 7, 8]]
 modelo31 = [[1, 4, 2], [3, 5, 8], [6, 0, 7]]
-novo_quebra_cabeca = QuebraCabeca([[0, 1, 2], [3, 7, 5], [6, 4, 8]])
-final_quebra_cabeca = QuebraCabeca([[0, 1, 2], [3, 4, 5], [6, 7, 8]])
+quebra_cabeca = QuebraCabeca(modelo31)
 
-# novo_quebra_cabeca = QuebraCabeca(modelo)
-agente = Agente()
-# resultado = agente.busca_em_amplitude(novo_quebra_cabeca)
+solucao = busca_bidirecional(quebra_cabeca)
+print(solucao)
 
-
-resultado = agente.busca_bidirecional(novo_quebra_cabeca, final_quebra_cabeca)
-print(resultado.estado)
 
 #
 # novo_quebra_cabeca = QuebraCabeca()
