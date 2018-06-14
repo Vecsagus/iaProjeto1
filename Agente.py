@@ -19,7 +19,7 @@ class Busca:
         self.explorado.add(no_id)
 
     def gera_id_de_estado(self, estado):
-        return "".join(["".join([str(letra) for letra in linha]) for linha in estado])
+        return int("".join(["".join([str(letra) for letra in linha]) for linha in estado]))
 
     def acha_no_por_id(self, identificador):
         for item in self.borda:
@@ -77,6 +77,7 @@ def expande_em_largura(problema, busca):
     busca.foi_explorado(no_atual.estado)
     
     print("    Estados filhos:")
+    novos_nos = []
     for acao in problema.get_opcoes_possiveis():
         novo_estado = problema.transicao(no_atual.estado, acao)
         # verifica se a ação gerou um novo estado
@@ -84,6 +85,7 @@ def expande_em_largura(problema, busca):
             # cria um no na arvore para o novo estado
             filho = NoArvoreDeBusca(novo_estado, no_atual, acao)
             # adiciona nó na borda
+            '''if '''
             if busca.adiciona_na_borda(filho):
                 print("        " + str(novo_estado))
     return busca.borda
@@ -116,4 +118,6 @@ def busca_bidirecional(problema):
                 identificador = itemBI[1]
                 noBI = busca_indo.acha_no_por_id(identificador)
                 noBV = busca_vindo.acha_no_por_id(identificador)
-                return solucao_bidirecional(noBV, noBI)
+                
+                return True
+                # return solucao_bidirecional(noBV, noBI)
